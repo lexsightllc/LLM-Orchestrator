@@ -111,4 +111,8 @@ cp .env.example .env
 
 ## License
 
-MIT
+Proprietary - All Rights Reserved
+
+This project is proprietary and confidential. Unauthorized copying,
+modification, distribution, or use is prohibited without prior
+written consent from the author.
