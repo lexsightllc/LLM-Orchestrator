@@ -2,11 +2,21 @@
 Worker implementations for the sandbox environment.
 
 This module provides different worker types for executing tasks in the sandbox:
+<<<<<<< HEAD
+- BaseWorker: Abstract base class for all workers
+=======
+>>>>>>> origin/main
 - CPUWorker: For CPU-intensive tasks
 - IOWorker: For I/O-bound tasks
 - ShellWorker: For executing shell commands
 - PythonWorker: For executing Python code
 - ToolWorker: For executing registered tools
+<<<<<<< HEAD
+
+Workers are designed to be used with the Sandbox class to provide isolated execution
+environments with configurable resource limits and security constraints.
+=======
+>>>>>>> origin/main
 """
 from __future__ import annotations
 
@@ -22,6 +32,81 @@ from enum import Enum, auto
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Type, Union, TypeVar, Generic, Callable, Awaitable
 
+<<<<<<< HEAD
+from pydantic import BaseModel, validator
+
+# Import types first to avoid circular imports
+from .types import (
+    WorkerType, WorkerConfig, WorkerResult, 
+    ResourceLimits, SandboxState, SandboxResult
+)
+from ..artifacts import Artifact, ArtifactStorage, create_json_artifact
+from ..tools import ToolVersion as Tool, ToolResult, ToolError, ToolVersionError
+
+logger = logging.getLogger(__name__)
+
+# Type variable for generic worker results
+T = TypeVar('T')
+
+# Import Sandbox here to avoid circular imports
+class Sandbox:
+    """Dummy Sandbox class that will be replaced with the real one."""
+    pass
+
+class SandboxError(Exception):
+    """Base exception for sandbox-related errors."""
+    pass
+
+# Add from_sandbox_result as a standalone function
+def worker_result_from_sandbox_result(
+    sandbox_result: SandboxResult,
+    output_parser: Optional[Callable[[str], Any]] = None
+) -> WorkerResult:
+    """Create a WorkerResult from a SandboxResult."""
+    output = sandbox_result.stdout
+    if output_parser:
+        try:
+            output = output_parser(output)
+            return WorkerResult(
+                success=sandbox_result.success,
+                output=output,
+                error=sandbox_result.stderr if not sandbox_result.success else None,
+                metadata={
+                    "return_code": sandbox_result.return_code,
+                    "execution_time": sandbox_result.execution_time,
+                    "memory_used_mb": sandbox_result.memory_used_mb,
+                    **sandbox_result.metadata
+                },
+                artifacts=sandbox_result.artifacts
+            )
+        except Exception as e:
+            return WorkerResult(
+                success=False,
+                output=output,
+                error=f"Failed to parse output: {str(e)}",
+                metadata={
+                    "return_code": sandbox_result.return_code,
+                    "stderr": sandbox_result.stderr,
+                    "execution_time": sandbox_result.execution_time,
+                    "memory_used_mb": sandbox_result.memory_used_mb,
+                }
+            )
+    
+    return WorkerResult(
+        success=sandbox_result.success,
+        output=output,
+        error=sandbox_result.stderr if not sandbox_result.success else None,
+        metadata={
+            "return_code": sandbox_result.return_code,
+            "execution_time": sandbox_result.execution_time,
+            "memory_used_mb": sandbox_result.memory_used_mb,
+            **sandbox_result.metadata
+        },
+        artifacts=sandbox_result.artifacts
+    )
+
+class BaseWorker(ABC):
+=======
 from pydantic import BaseModel, Field
 
 from . import Sandbox, ResourceLimits, SandboxResult, SandboxError
@@ -94,6 +179,7 @@ class WorkerResult(BaseModel):
         )
 
 class BaseWorker(ABC, Generic[T]):
+>>>>>>> origin/main
     """Base class for all workers."""
     
     def __init__(
@@ -109,13 +195,39 @@ class BaseWorker(ABC, Generic[T]):
         """
         self.config = config
         self.storage = storage
+<<<<<<< HEAD
+        self._sandbox = None  # Will be set after Sandbox class is defined
+    
+    async def __aenter__(self):
+=======
         self._sandbox: Optional[Sandbox] = None
     
     async def __aenter__(self) -> 'BaseWorker[T]':
+>>>>>>> origin/main
         """Context manager entry."""
         await self.initialize()
         return self
     
+<<<<<<< HEAD
+    async def __aexit__(self, exc_type, exc_val, exc_tb):
+        """Context manager exit."""
+        await self.cleanup()
+    
+    async def initialize(self):
+        """Initialize the worker."""
+        if self._sandbox is None and Sandbox is not None:
+            self._sandbox = Sandbox(
+                limits=self.config.limits,
+                workdir=self.config.workdir,
+                cleanup=self.config.cleanup
+            )
+            await self._sandbox.__aenter__()
+    
+    async def cleanup(self):
+        """Clean up resources used by the worker."""
+        if self._sandbox is not None:
+            await self._sandbox.__aexit__(None, None, None)
+=======
     async def __aexit__(self, exc_type, exc_val, exc_tb) -> None:
         """Context manager exit."""
         await self.cleanup()
@@ -134,6 +246,7 @@ class BaseWorker(ABC, Generic[T]):
         """Clean up resources used by the worker."""
         if self._sandbox:
             await self._sandbox.cleanup_resources()
+>>>>>>> origin/main
             self._sandbox = None
     
     @abstractmethod
@@ -607,7 +720,22 @@ class PythonWorker(BaseWorker):
         return WorkerResult.from_sandbox_result(result)
 
 class ToolWorker(BaseWorker):
+<<<<<<< HEAD
+    """Worker for executing registered tools in a sandboxed environment.
+    
+    This worker handles the execution of tools registered in the tool registry,
+    managing their lifecycle, resource constraints, and result processing.
+    
+    Args:
+        tool_name: Name of the tool to execute
+        tool_version: Version of the tool (default: "latest")
+        config: Worker configuration. If None, a default config will be used.
+        storage: Optional storage for artifacts
+        sandbox: Optional sandbox instance. If None, one will be created.
+    """
+=======
     """Worker for executing registered tools."""
+>>>>>>> origin/main
     
     def __init__(
         self,
@@ -615,6 +743,10 @@ class ToolWorker(BaseWorker):
         tool_version: str = "latest",
         config: Optional[WorkerConfig] = None,
         storage: Optional[ArtifactStorage] = None,
+<<<<<<< HEAD
+        sandbox: Optional[Sandbox] = None,
+    ):
+=======
     ):
         """Initialize the tool worker.
         
@@ -624,6 +756,7 @@ class ToolWorker(BaseWorker):
             config: Worker configuration
             storage: Artifact storage
         """
+>>>>>>> origin/main
         if config is None:
             config = WorkerConfig(
                 worker_type=WorkerType.TOOL,
@@ -638,16 +771,60 @@ class ToolWorker(BaseWorker):
         self.tool_name = tool_name
         self.tool_version = tool_version
         self._tool = None
+<<<<<<< HEAD
+        self._sandbox = sandbox
+        self._is_initialized = False
+=======
+>>>>>>> origin/main
         
         super().__init__(config, storage)
     
     async def initialize(self) -> None:
+<<<<<<< HEAD
+        """Initialize the worker and load the tool.
+        
+        Raises:
+            ToolError: If the tool cannot be found or loaded
+            ToolVersionError: If the specified version is not available
+        """
+        if self._is_initialized:
+            return
+            
+        await super().initialize()
+        
+        try:
+            # Import here to avoid circular imports
+            from ..tools import tool_registry
+            
+            # Get the tool from the registry
+            tool_cls = tool_registry.get_tool(self.tool_name, self.tool_version)
+            if tool_cls is None:
+                raise ToolError(f"Tool '{self.tool_name}' not found in registry")
+                
+            # Create a sandbox if one wasn't provided
+            if self._sandbox is None:
+                self._sandbox = Sandbox(limits=self.config.limits)
+                await self._sandbox.initialize()
+            
+            # Initialize the tool
+            self._tool = tool_cls(sandbox=self._sandbox, storage=self.storage)
+            self._is_initialized = True
+            
+            logger.info(f"Initialized ToolWorker for {self.tool_name} v{self.tool_version}")
+            
+        except Exception as e:
+            logger.error(f"Failed to initialize ToolWorker: {e}")
+            if isinstance(e, (ToolError, ToolVersionError)):
+                raise
+            raise ToolError(f"Failed to initialize tool: {e}") from e
+=======
         """Initialize the worker and load the tool."""
         await super().initialize()
         
         # TODO: Load the tool from the tool registry
         # self._tool = await self._load_tool()
         raise NotImplementedError("Tool loading not implemented yet")
+>>>>>>> origin/main
     
     async def execute(self, *args, **kwargs) -> WorkerResult:
         """Execute the tool with the given arguments.
@@ -657,22 +834,80 @@ class ToolWorker(BaseWorker):
             **kwargs: Keyword arguments to pass to the tool
             
         Returns:
+<<<<<<< HEAD
+            WorkerResult containing the tool's output and metadata
+            
+        Raises:
+            RuntimeError: If the worker is not initialized
+            ToolError: If the tool execution fails
+        """
+        if not self._is_initialized or not self._tool:
+            raise RuntimeError(
+                "Tool not loaded. Call initialize() first or use as a context manager."
+            )
+        
+        start_time = time.monotonic()
+=======
             WorkerResult containing the tool's output
         """
         if not self._tool:
             raise RuntimeError("Tool not loaded. Call initialize() first or use as a context manager.")
+>>>>>>> origin/main
         
         try:
             # Execute the tool
             result = await self._tool.execute(*args, **kwargs)
+<<<<<<< HEAD
+            execution_time = time.monotonic() - start_time
+            
+            # Create a result object
+            worker_result = WorkerResult(
+=======
             
             return WorkerResult(
+>>>>>>> origin/main
                 success=result.success,
                 output=result.output,
                 error=result.error,
                 metadata={
                     "tool": self.tool_name,
                     "version": self.tool_version,
+<<<<<<< HEAD
+                    "execution_time": execution_time,
+                    "tool_metadata": getattr(result, 'metadata', {})
+                },
+                artifacts={
+                    name: create_json_artifact(
+                        artifact.dict() if hasattr(artifact, 'dict') else artifact,
+                        name=f"{self.tool_name}_{name}"
+                    )
+                    for name, artifact in getattr(result, 'artifacts', {}).items()
+                }
+            )
+            
+            # Log the result
+            logger.info(
+                f"Tool '{self.tool_name}' executed in {execution_time:.2f}s: "
+                f"success={result.success}"
+            )
+            
+            return worker_result
+            
+        except Exception as e:
+            execution_time = time.monotonic() - start_time
+            error_msg = f"Tool '{self.tool_name}' execution failed after {execution_time:.2f}s: {e}"
+            logger.error(error_msg, exc_info=True)
+            
+            return WorkerResult(
+                success=False,
+                error=error_msg,
+                metadata={
+                    "tool": self.tool_name,
+                    "version": self.tool_version,
+                    "execution_time": execution_time,
+                    "error_type": type(e).__name__,
+                    "error_details": str(e)
+=======
                     "execution_time": getattr(result, 'execution_time', None),
                 },
                 artifacts=getattr(result, 'artifacts', {})
@@ -684,6 +919,7 @@ class ToolWorker(BaseWorker):
                 metadata={
                     "tool": self.tool_name,
                     "version": self.tool_version,
+>>>>>>> origin/main
                 }
             )
 
@@ -700,6 +936,75 @@ def create_worker(
         worker_type: Type of worker to create (cpu, io, shell, python, tool)
         config: Worker configuration
         storage: Artifact storage
+<<<<<<< HEAD
+        **kwargs: Additional arguments for the worker constructor:
+            - For ToolWorker: tool_name, tool_version, sandbox
+            - For other workers: workdir, env_vars, etc.
+            
+    Returns:
+        A worker instance
+    """
+    """Create a worker of the specified type.
+    
+    Args:
+        worker_type: Type of worker to create (cpu, io, shell, python, tool)
+        config: Worker configuration
+        storage: Artifact storage
+        **kwargs: Additional arguments for the worker constructor:
+            - For ToolWorker: tool_name, tool_version, sandbox
+            - For other workers: workdir, env_vars, etc.
+            
+    Returns:
+        A worker instance
+        
+    Example:
+        ```python
+        # Create a shell worker
+        shell_worker = create_worker('shell')
+        
+        # Create a tool worker
+        tool_worker = create_worker(
+            'tool',
+            tool_name='calculator',
+            tool_version='1.0.0',
+            storage=my_storage
+        )
+        ```
+    """
+    if isinstance(worker_type, str):
+        worker_type = WorkerType(worker_type.lower())
+    
+    # Special handling for ToolWorker
+    if worker_type == WorkerType.TOOL:
+        tool_name = kwargs.pop('tool_name', None)
+        if tool_name is None:
+            raise ValueError("tool_name is required for ToolWorker")
+            
+        tool_version = kwargs.pop('tool_version', 'latest')
+        sandbox = kwargs.pop('sandbox', None)
+        
+        return ToolWorker(
+            tool_name=tool_name,
+            tool_version=tool_version,
+            config=config,
+            storage=storage,
+            sandbox=sandbox,
+            **kwargs
+        )
+    
+    # Handle other worker types
+    worker_class = {
+        WorkerType.CPU: CPUWorker,
+        WorkerType.IO: IOWorker,
+        WorkerType.SHELL: ShellWorker,
+        WorkerType.PYTHON: PythonWorker,
+    }.get(worker_type)
+    
+    if worker_class is None:
+        raise ValueError(f"Unknown worker type: {worker_type}")
+    
+    return worker_class(config=config, storage=storage, **kwargs)
+=======
         **kwargs: Additional arguments for the worker constructor
         
     Returns:
@@ -720,3 +1025,4 @@ def create_worker(
         return ToolWorker(config=config, storage=storage, **kwargs)
     else:
         raise ValueError(f"Unknown worker type: {worker_type}")
+>>>>>>> origin/main

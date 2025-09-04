@@ -7,7 +7,10 @@ with configurable resource limits and security constraints.
 from __future__ import annotations
 
 import asyncio
+<<<<<<< HEAD
+=======
 import enum
+>>>>>>> origin/main
 import json
 import logging
 import os
@@ -27,8 +30,58 @@ from pydantic import BaseModel, Field, validator
 from ..artifacts import Artifact, ArtifactStorage, create_json_artifact
 from ..tools import ToolResult
 
+<<<<<<< HEAD
+# Import types first to avoid circular imports
+from .types import (
+    SandboxState, ResourceLimits, SandboxResult,
+    WorkerType, WorkerConfig, WorkerResult
+)
+
+# Import workers after types are defined
+# Note: We'll import these after the Sandbox class is defined to avoid circular imports
+BaseWorker = None
+CPUWorker = None
+IOWorker = None
+ShellWorker = None
+PythonWorker = None
+ToolWorker = None
+create_worker = None
+
 logger = logging.getLogger(__name__)
 
+# Re-export types and components
+__all__ = [
+    # Core sandbox components
+    'Sandbox', 'ResourceLimits', 'SandboxResult', 'SandboxState',
+    'SandboxError', 'ResourceLimitExceeded', 'SandboxTimeoutError',
+    
+    # Worker components
+    'BaseWorker', 'WorkerResult', 'WorkerConfig', 'WorkerType',
+    'CPUWorker', 'IOWorker', 'ShellWorker', 'PythonWorker', 'ToolWorker',
+    'create_worker',
+    
+    # Sandbox management
+    'SandboxManager', 'get_sandbox_manager', 'create_sandbox'
+]
+
+# Lazy import workers after Sandbox is defined
+def _import_workers():
+    global BaseWorker, CPUWorker, IOWorker, ShellWorker, PythonWorker, ToolWorker, create_worker, worker_result_from_sandbox_result
+    if BaseWorker is None:
+        from .workers import (
+            BaseWorker, CPUWorker, IOWorker, ShellWorker,
+            PythonWorker, ToolWorker, create_worker, worker_result_from_sandbox_result
+        )
+        
+        # Update the Sandbox class in the workers module
+        from .workers import Sandbox as WorkersSandbox
+        global Sandbox
+        Sandbox = WorkersSandbox
+
+=======
+logger = logging.getLogger(__name__)
+
+>>>>>>> origin/main
 class SandboxError(Exception):
     """Base exception for sandbox-related errors."""
     pass
@@ -41,6 +94,8 @@ class SandboxTimeoutError(SandboxError):
     """Raised when a sandbox operation times out."""
     pass
 
+<<<<<<< HEAD
+=======
 class SandboxState(str, enum.Enum):
     """State of a sandboxed process."""
     PENDING = "pending"
@@ -147,6 +202,7 @@ class SandboxResult:
             },
         )
 
+>>>>>>> origin/main
 class Sandbox:
     """
     A secure, isolated execution environment for running untrusted code.
@@ -171,6 +227,12 @@ class Sandbox:
             workdir: Working directory (if None, a temporary directory will be used)
             cleanup: Whether to clean up the working directory on exit
         """
+<<<<<<< HEAD
+        # Import workers now that Sandbox is defined
+        _import_workers()
+        
+=======
+>>>>>>> origin/main
         self.limits = limits or ResourceLimits()
         self.storage = storage
         self.cleanup = cleanup
