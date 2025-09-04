@@ -93,13 +93,13 @@ class TestCommandRegistry(unittest.TestCase):
         self.test_cmd = test_cmd
     
     def test_register_command(self):
-        ""Test registering a command."""
+        """Test registering a command."""
         self.assertIn("test", self.registry._commands)
         self.assertEqual(self.registry._commands["test"].handler, self.test_cmd)
         self.assertEqual(self.registry._commands["test"].metadata.aliases, ["t"])
     
     def test_get_command(self):
-        ""Test getting a command by name or alias."""
+        """Test getting a command by name or alias."""
         # By name
         cmd = self.registry.get_command("test")
         self.assertIsNotNone(cmd)
@@ -111,7 +111,7 @@ class TestCommandRegistry(unittest.TestCase):
         self.assertEqual(cmd.handler, self.test_cmd)
     
     def test_get_commands(self):
-        ""Test getting all non-hidden commands."""
+        """Test getting all non-hidden commands."""
         # Add a hidden command
         @self.registry.register("hidden", hidden=True)
         async def hidden_cmd(repl, args):
@@ -122,7 +122,7 @@ class TestCommandRegistry(unittest.TestCase):
         self.assertEqual(commands[0].metadata.name, "test")
 
 class TestSystemCommands(unittest.IsolatedAsyncioTestCase):
-    ""Test system commands."""
+    """Test system commands."""
     
     async def asyncSetUp(self):
         """Set up test fixtures."""
@@ -143,7 +143,7 @@ class TestSystemCommands(unittest.IsolatedAsyncioTestCase):
         self.mock_output.append(" ".join(str(a) for a in args))
     
     async def test_help_specific_command(self):
-        ""Test getting help for a specific command."""
+        """Test getting help for a specific command."""
         await self.cmds.do_help(["help"])
         
         output = "\n".join(self.mock_output)
@@ -151,7 +151,7 @@ class TestSystemCommands(unittest.IsolatedAsyncioTestCase):
         self.assertIn("Show help for commands", output)
     
     async def test_exit_command(self):
-        ""Test the exit command."""
+        """Test the exit command."""
         result = await self.cmds.do_exit([])
         self.assertTrue(result)
         self.assertTrue(self.repl.should_exit)
