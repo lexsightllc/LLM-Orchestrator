@@ -11,6 +11,14 @@ A high-performance orchestration framework for managing multi-agent LLM workflow
 - **Structured Artifacts**: Type-safe data passing between components
 - **REPL Interface**: Interactive debugging and control
 
+## Roadmap: Hardening the Orchestrator
+
+- **Deterministic Semantics**: Conversations, tool calls, and state updates are captured as typed events with content hashes, causal clocks, and provenance so runs can be replayed bit‑for‑bit.
+- **Supply Chain Provenance**: Tools, prompts, and policies will ship with SLSA/in‑toto attestations and signature verification to ensure only trusted artifacts execute.
+- **Layered Safety**: Sandboxed code executes in isolation tiers (e.g., Docker, LXC, gVisor) with AST‑level restrictions and network egress guards; isolation overhead is measured and documented.
+- **Economic Governance**: A resource‑aware scheduler enforces token and cost budgets per step, enabling dynamic model selection, caching policies, and cost‑aware routing.
+- **Notebook Replay**: Each workflow can export a replay bundle with inputs, seeds, and provenance to support deterministic local or CI reproduction.
+
 ## Installation
 
 1. Clone the repository:
