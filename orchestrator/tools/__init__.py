@@ -7,7 +7,12 @@ import importlib.util
 import json
 import logging
 from pydantic import BaseModel, Field
-from semver import VersionInfo
+
+# The original implementation depended on the external `semver` package for
+# version parsing and constraint matching. To keep the test environment
+# lightweight and avoid an additional dependency, we provide a minimal
+# compatible implementation in ``orchestrator._compat.semver``.
+from orchestrator._compat.semver import VersionInfo
 import hashlib
 import os
 
