@@ -1,6 +1,6 @@
 # LLM Orchestrator
 
-A high-performance orchestration framework for managing multi-agent LLM workflows with fine-grained control over context, tooling, and resource allocation.
+A high-performance orchestration framework for managing multi-agent LLM workflows with fine‑grained control over context, tooling, and resource allocation.
 
 ## Features
 
@@ -10,6 +10,21 @@ A high-performance orchestration framework for managing multi-agent LLM workflow
 - **Sandboxed Execution**: Secure, isolated execution environments
 - **Structured Artifacts**: Type-safe data passing between components
 - **REPL Interface**: Interactive debugging and control
+
+## Architecture
+
+```mermaid
+graph TD
+    A[Client] --> B[CLI / REPL]
+    B --> C[Orchestrator Core]
+    C --> D[Context Assembler]
+    C --> E[Tooling & Sandbox]
+    C --> F[Artifact Storage]
+    C --> G[Event Log]
+    C --> H[Security & Governance]
+```
+
+See [Architecture Overview](docs/architecture_overview.md) for a detailed component guide.
 
 ## Roadmap: Hardening the Orchestrator
 
