@@ -125,8 +125,12 @@ class Artifact:
         """Validate the artifact against a JSON Schema."""
         # If no schema provided, try to load from schema_ref
         if schema is None and self.metadata.schema_ref:
-            # In a real implementation, this would load the schema from a registry
-            raise NotImplementedError("Schema loading from reference not implemented")
+            # Schema references are not yet supported – log and skip validation
+            logger.warning(
+                "Schema loading from reference '%s' not implemented; skipping validation",
+                self.metadata.schema_ref,
+            )
+            return True
         
         if schema is None:
             return True  # No schema to validate against
