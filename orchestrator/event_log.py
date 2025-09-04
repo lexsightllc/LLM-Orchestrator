@@ -3,7 +3,11 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from hashlib import sha256
-from typing import Callable, Dict, List
+from typing import Callable, Dict, List, Optional, Tuple
+
+from .security.pii import redact
+from .security.hsm import HSMClient
+from .security.forget import ForgetfulStorage
 
 
 def _hash(data: bytes) -> str:
@@ -70,21 +74,65 @@ def merkle_root(leaves: List[str]) -> str:
 
 
 class ShardedEventLog:
-    """Manage multiple event log shards with Merkle anchoring."""
+    """Manage multiple event log shards with optional privacy features."""
 
-    def __init__(self, shard_func: Callable[[bytes], str]):
+    def __init__(
+        self,
+        shard_func: Callable[[bytes], str],
+        *,
+        pii_redactor: Callable[[str], str] | None = redact,
+        signer: Optional[HSMClient] = None,
+        forgetful_storage: Optional[ForgetfulStorage] = None,
+    ) -> None:
         self.shard_func = shard_func
         self.shards: Dict[str, EventLogShard] = {}
+        self.redactor = pii_redactor
+        self.signer = signer
+        self.forgetful = forgetful_storage
+        self.signatures: Dict[Tuple[str, int], bytes] = {}
+        self.user_event_map: Dict[str, List[Tuple[str, int]]] = {}
 
     def _get_shard(self, key: str) -> EventLogShard:
         return self.shards.setdefault(key, EventLogShard())
 
-    def append(self, data: bytes | str) -> Event:
+    def append(
+        self,
+        data: bytes | str,
+        user_id: str | None = None,
+        sign: bool = False,
+    ) -> Event:
         if isinstance(data, str):
             data = data.encode()
+
+        # PII redaction
+        if self.redactor:
+            data = self.redactor(data.decode("utf-8", errors="ignore")).encode()
+
+        # Determine shard key before encryption for stability
         key = self.shard_func(data)
         shard = self._get_shard(key)
-        return shard.append(data)
+        index = len(shard.events)
+
+        # Encrypt if forgetful storage provided and user_id given
+        if user_id and self.forgetful:
+            data = self.forgetful.encrypt(user_id, data)
+            self.user_event_map.setdefault(user_id, []).append((key, index))
+
+        event = shard.append(data)
+
+        # Optional signing
+        if sign and self.signer:
+            self.signatures[(key, len(shard.events) - 1)] = self.signer.sign(
+                event.hash.encode()
+            )
+
+        return event
+
+    def forget_user(self, user_id: str) -> None:
+        if self.forgetful:
+            self.forgetful.forget(user_id)
+        # Record a tombstone event to indicate deletion
+        self.append(f"FORGET:{user_id}")
 
     def anchor(self) -> str:
         leaves = [self.shards[k].tip for k in sorted(self.shards)]
