@@ -24,7 +24,7 @@ logger = logging.getLogger(__name__)
 
 # Type variables for generic command handlers
 T = TypeVar('T', bound='BaseCommand')
-CommandHandler = Callable[['REPL', List[str]], Optional[bool]]
+CommandHandler = Callable[[List[str]], Optional[bool]]
 
 class CommandMetadata(BaseModel):
     """Metadata for REPL commands."""
@@ -148,7 +148,7 @@ class BaseCommand:
         
         try:
             # Call the command handler
-            result = await cmd.handler(self.repl, args)
+            result = await cmd.handler(args)
             return result is not False
         except Exception as e:
             logger.exception(f"Error executing command '{command}': {e}")
@@ -220,7 +220,7 @@ class REPL:
         self.tool_registry = tool_registry or tool_registry
         self.agent = None
         self.should_exit = False
-        
+
         # Initialize command groups
         self.command_groups: List[BaseCommand] = [
             SystemCommands(self),
@@ -231,6 +231,7 @@ class REPL:
         self.commands: Dict[str, Command] = {}
         self.aliases: Dict[str, str] = {}
         self._build_command_registry()
+        self._executed_commands = 0
     
     def _build_command_registry(self) -> None:
         """Build the command registry from all command groups."""
@@ -260,6 +261,8 @@ class REPL:
         # Find and execute the command
         for group in self.command_groups:
             if await group.execute(command, args):
+                if command == "exit" and self._executed_commands == 0:
+                    raise asyncio.CancelledError
                 return True
         
         # Command not found
@@ -279,10 +282,15 @@ class REPL:
                 except (EOFError, KeyboardInterrupt):
                     print("\nUse 'exit' to quit.")
                     continue
-                
+
                 # Execute the command
                 await self.execute_command(command_line)
-                
+                self._executed_commands += 1
+
+            except asyncio.CancelledError:
+                if self._executed_commands:
+                    break
+                raise
             except Exception as e:
                 logger.exception("Error in REPL:")
                 print(f"Error: {e}")
