@@ -21,9 +21,12 @@ class Event:
 class EventLogShard:
     """Append-only log shard maintaining its own hash chain."""
 
-    def __init__(self) -> None:
+    def __init__(self, segment_size: int = 1000) -> None:
         self.events: List[Event] = []
         self.tip: str = "0" * 64
+        # Pre-computed segment tips for O(1) lookup.
+        self.segment_size = segment_size
+        self.segments: List[str] = []
 
     def append(self, data: bytes | str) -> Event:
         if isinstance(data, str):
@@ -33,13 +36,18 @@ class EventLogShard:
         event = Event(data=data, prev_hash=prev, hash=h)
         self.events.append(event)
         self.tip = h
+        if len(self.events) % self.segment_size == 0:
+            # Persist the tip to allow fast verification later on.
+            self.segments.append(self.tip)
         return event
 
     def verify(self, index: int) -> bool:
         if index >= len(self.events):
             return False
-        prev = "0" * 64
-        for e in self.events[: index + 1]:
+        segment_idx = index // self.segment_size
+        start = segment_idx * self.segment_size
+        prev = "0" * 64 if segment_idx == 0 else self.segments[segment_idx - 1]
+        for e in self.events[start : index + 1]:
             if _hash(prev.encode() + e.data) != e.hash:
                 return False
             prev = e.hash

@@ -14,6 +14,19 @@ def test_shard_append_and_verify():
     assert not shard.verify(1)
 
 
+def test_segmented_verification():
+    shard = EventLogShard(segment_size=2)
+    for i in range(5):
+        shard.append(str(i))
+
+    # two full segments should be stored
+    assert len(shard.segments) == 2
+    assert shard.verify(4)
+
+    shard.events[4].data = b"tamper"
+    assert not shard.verify(4)
+
+
 def test_sharded_anchor_and_verify():
     log = ShardedEventLog(lambda data: str(data[0] % 2))
     log.append(b"a")  # shard '1'
