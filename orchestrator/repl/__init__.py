@@ -303,6 +303,38 @@ async def start_repl(
     repl = REPL(storage=storage, tool_registry=tool_registry)
     await repl.run()
 
+
+def load_ipython_extension(ipython, *, repl: Optional[REPL] = None) -> None:
+    """Load IPython extension for orchestrator REPL.
+
+    Registers a ``%orch`` line magic that forwards commands to a REPL
+    instance and exposes the ``repl`` object in the user namespace for
+    convenience.
+    """
+    repl = repl or REPL()
+
+    async def _run(line: str) -> None:
+        await repl.execute_command(line)
+
+    def _magic(line: str) -> None:
+        coro = _run(line)
+        try:
+            loop = asyncio.get_running_loop()
+        except RuntimeError:
+            asyncio.run(coro)
+        else:
+            loop.create_task(coro)
+
+    ipython.push({"repl": repl})
+    ipython.register_magic_function(_magic, "line", "orch")
+    print("Loaded %orch magic. Use `%orch help` to list commands.")
+
+
+def unload_ipython_extension(ipython) -> None:
+    """Unload the orchestrator IPython extension."""
+    magics = ipython.magics_manager.magics.get("line", {})
+    magics.pop("orch", None)
+
 if __name__ == "__main__":
     # Configure logging
     logging.basicConfig(
