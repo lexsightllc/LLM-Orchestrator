@@ -182,6 +182,13 @@ class ToolResult(BaseModel):
 # Global registry instance
 tool_registry = ToolRegistry()
 
+from .normalization import patch_registry  # noqa: E402
+
+try:
+    patch_registry(tool_registry)
+except Exception as _e:  # pragma: no cover - defensive
+    pass
+
 def register_tool(version: str, **kwargs):
     """Decorator to register a tool function."""
     def decorator(func):
