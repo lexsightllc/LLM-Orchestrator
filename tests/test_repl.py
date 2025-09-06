@@ -5,7 +5,15 @@ import sys
 import unittest
 from unittest.mock import MagicMock, patch
 
-from orchestrator.repl import REPL, CommandRegistry, Command, CommandMetadata, SystemCommands
+from orchestrator.repl import (
+    REPL,
+    CommandRegistry,
+    Command,
+    CommandMetadata,
+    SystemCommands,
+    load_ipython_extension,
+    unload_ipython_extension,
+)
 
 class TestREPL(unittest.IsolatedAsyncioTestCase):
     """Test the REPL interface."""
@@ -155,6 +163,30 @@ class TestSystemCommands(unittest.IsolatedAsyncioTestCase):
         result = await self.cmds.do_exit([])
         self.assertTrue(result)
         self.assertTrue(self.repl.should_exit)
+
+
+try:
+    from IPython.core.interactiveshell import InteractiveShell
+except Exception:  # pragma: no cover - IPython optional
+    InteractiveShell = None
+
+
+@unittest.skipUnless(InteractiveShell, "IPython not installed")
+class TestIPythonExtension(unittest.TestCase):
+    """Ensure the IPython extension registers magics."""
+
+    def test_magic_registration(self):
+        shell = InteractiveShell.instance()
+        # Ensure clean state
+        unload_ipython_extension(shell)
+
+        self.assertIsNone(shell.find_line_magic("orch"))
+        load_ipython_extension(shell)
+        self.assertIsNotNone(shell.find_line_magic("orch"))
+        # Smoke test executing a command
+        shell.run_line_magic("orch", "help")
+        unload_ipython_extension(shell)
+        self.assertIsNone(shell.find_line_magic("orch"))
 
 if __name__ == "__main__":
     unittest.main()
