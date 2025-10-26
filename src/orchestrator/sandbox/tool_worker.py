@@ -16,19 +16,24 @@ import sys
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Type, TypeVar, get_type_hints
 
-from pydantic import BaseModel, Field, ValidationError
+from dataclasses import dataclass
+
+from pydantic import ValidationError
 
 from ..tools import ToolVersion, ToolResult, tool_registry, ToolError, ToolVersionError
+from .types import ResourceLimits
 from .workers import BaseWorker, WorkerResult, WorkerConfig, WorkerType
 
 logger = logging.getLogger(__name__)
 
+@dataclass
 class ToolWorkerConfig(WorkerConfig):
     """Configuration for the ToolWorker."""
-    tool_name: str = Field(..., description="Name of the tool to execute")
-    tool_version: str = Field("latest", description="Version of the tool (default: latest)")
-    install_dependencies: bool = Field(True, description="Whether to install tool dependencies")
-    dependency_timeout: int = Field(300, description="Timeout for installing dependencies (seconds)")
+
+    tool_name: str = ""
+    tool_version: str = "latest"
+    install_dependencies: bool = True
+    dependency_timeout: int = 300
 
 class ToolWorker(BaseWorker):
     """Worker for executing registered tools in a sandboxed environment."""
@@ -55,31 +60,31 @@ class ToolWorker(BaseWorker):
                 worker_type=WorkerType.TOOL,
                 tool_name=tool_name,
                 tool_version=tool_version,
-                limits={
-                    "cpu_percent": 100.0,
-                    "memory_mb": 2048,
-                    "timeout_seconds": 300,
-                    "max_output_bytes": 10 * 1024 * 1024,  # 10MB
-                },
+                limits=ResourceLimits(
+                    cpu_percent=100.0,
+                    memory_mb=2048,
+                    timeout_seconds=300,
+                    max_output_bytes=10 * 1024 * 1024,
+                ),
             )
         
         self.tool_name = tool_name
         self.tool_version = tool_version
         self._tool: Optional[ToolVersion] = None
         self.__sandbox = sandbox  # Store sandbox instance if provided
-        
+
         super().__init__(config, storage)
+        if sandbox is not None:
+            self._sandbox = sandbox
+            self._is_initialized = True
     
     async def initialize(self) -> None:
         """Initialize the worker and load the tool."""
-        await super().initialize()
-        
-        # Initialize sandbox if not provided
         if self.__sandbox is None:
-            from .sandbox import Sandbox  # Import here to avoid circular imports
-            self.__sandbox = Sandbox()
-            await self.__sandbox.initialize()
-        
+            await super().initialize()
+        else:
+            self._sandbox = self.__sandbox
+
         # Load the tool from the registry
         try:
             self._tool = tool_registry.get_tool(self.tool_name, self.tool_version)
@@ -149,15 +154,26 @@ class ToolWorker(BaseWorker):
             # Execute the tool
             start_time = asyncio.get_event_loop().time()
             
-            if inspect.iscoroutinefunction(self._tool.implementation):
-                tool_result = await self._tool.implementation(*args, **kwargs)
-            else:
-                # Run synchronous functions in a thread pool
+            async def _invoke(payload: Dict[str, Any]) -> ToolResult:
+                impl = self._tool.implementation
+                if inspect.iscoroutinefunction(impl):
+                    try:
+                        return await impl(**payload)
+                    except TypeError:
+                        return await impl(payload)
+
                 loop = asyncio.get_event_loop()
-                tool_result = await loop.run_in_executor(
-                    None,
-                    lambda: self._tool.implementation(*args, **kwargs)
-                )
+
+                def _call() -> Any:
+                    try:
+                        return impl(**payload)
+                    except TypeError:
+                        return impl(payload)
+
+                return await loop.run_in_executor(None, _call)
+
+            payload = dict(kwargs)
+            tool_result = await _invoke(payload)
             
             execution_time = asyncio.get_event_loop().time() - start_time
             

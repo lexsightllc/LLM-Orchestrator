@@ -16,7 +16,8 @@ dependencies = [
   "pydantic==1.10.13",
   "python-dotenv==1.0.0",
   "httpx==0.25.2",
-  "orjson==3.9.12"
+  "orjson==3.9.12",
+  "jsonschema==4.23.0"
 ]
 optional-dependencies = { test = ["pytest==7.4.4", "pytest-asyncio==0.21.1"] }
 
