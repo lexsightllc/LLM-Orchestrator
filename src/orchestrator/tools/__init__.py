@@ -1,6 +1,8 @@
 """Tool versioning and registry for LLM Orchestrator."""
 
 from typing import Dict, List, Optional, Protocol, TypeVar, Any
+import functools
+import inspect
 from dataclasses import dataclass, field
 from pathlib import Path
 import importlib.util
@@ -195,16 +197,57 @@ def register_tool(version: str, **kwargs):
         # Extract name from function if not provided
         name = kwargs.get('name', func.__name__)
         
+        implementation = _adapt_tool_callable(func)
+
         # Create and register the tool
         tool = ToolVersion(
             name=name,
             version=version,
             input_schema=kwargs.get('input_schema', {}),
             output_schema=kwargs.get('output_schema', {}),
-            implementation=func,
+            implementation=implementation,
             migrations=kwargs.get('migrations', {})
         )
         
-        tool_registry.register(tool, aliases=kwargs.get('aliases', []))
+        aliases = list(kwargs.get('aliases', []))
+        if "latest" not in aliases:
+            aliases.append("latest")
+        tool_registry.register(tool, aliases=aliases)
         return func
     return decorator
+
+
+def _adapt_tool_callable(func):
+    """Adapt tool callables so they accept a payload dictionary."""
+
+    signature = inspect.signature(func)
+    params = list(signature.parameters.values())
+
+    expects_payload = False
+    if len(params) == 1 and params[0].kind in (
+        inspect.Parameter.POSITIONAL_ONLY,
+        inspect.Parameter.POSITIONAL_OR_KEYWORD,
+    ):
+        param = params[0]
+        annotation = param.annotation
+        expects_payload = (
+            param.name == "payload"
+            or annotation in {dict, Dict[str, Any]}
+        )
+
+    if expects_payload:
+        return func
+
+    if inspect.iscoroutinefunction(func):
+
+        @functools.wraps(func)
+        async def async_wrapper(payload: Dict[str, Any]):
+            return await func(**payload)
+
+        return async_wrapper
+
+    @functools.wraps(func)
+    def wrapper(payload: Dict[str, Any]):
+        return func(**payload)
+
+    return wrapper

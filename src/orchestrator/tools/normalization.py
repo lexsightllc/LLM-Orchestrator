@@ -133,10 +133,10 @@ def patch_registry(registry: Any) -> None:
     if hasattr(registry, "register"):
         _orig_reg = registry.register
 
-        def _safe_register(tool_obj: Any) -> Any:
+        def _safe_register(tool_obj: Any, *args: Any, **kwargs: Any) -> Any:
             tool_obj = _ensure_instance(tool_obj)
             tool_obj = _ensure_proxied(tool_obj)
-            return _orig_reg(tool_obj)
+            return _orig_reg(tool_obj, *args, **kwargs)
 
         registry.register = _safe_register  # type: ignore[assignment]
 

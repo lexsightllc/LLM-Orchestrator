@@ -2,6 +2,7 @@
 from enum import Enum, auto
 from typing import Any, Dict, List, Optional, Union
 from pathlib import Path
+import sys
 from pydantic import BaseModel, Field
 
 class SandboxState(str, Enum):
@@ -25,7 +26,7 @@ class ResourceLimits(BaseModel):
     allowed_hosts: List[str] = Field(default_factory=list, description="List of allowed hosts for network access")
     env_vars: Dict[str, str] = Field(default_factory=dict, description="Environment variables")
     workdir: Optional[str] = Field(None, description="Working directory")
-    python_path: str = Field("python", description="Path to Python interpreter")
+    python_path: str = Field(sys.executable, description="Path to Python interpreter")
 
 class SandboxResult(BaseModel):
     """Result of a sandboxed execution."""

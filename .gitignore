@@ -30,7 +30,7 @@ site/
 # SBOM and artifacts
 sbom/
 !sbom/.gitkeep
-artifacts/
+/artifacts/
 ci/detect-secrets-report.json
 
 # Logs
