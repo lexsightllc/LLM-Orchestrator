@@ -1,0 +1,29 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+source "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/_common.sh"
+
+CHECK_MODE="0"
+
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+    --check)
+      CHECK_MODE="1"
+      shift
+      ;;
+    *)
+      echo "Unknown argument: $1" >&2
+      exit 1
+      ;;
+  esac
+done
+
+if [[ "${CHECK_MODE}" == "1" ]]; then
+  run_python -m black --check src tests
+  run_python -m isort --check-only src tests
+  run_python -m ruff format --check src tests
+else
+  run_python -m black src tests
+  run_python -m isort src tests
+  run_python -m ruff format src tests
+fi

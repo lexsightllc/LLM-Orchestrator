@@ -1,0 +1,21 @@
+# Generated from requirements-dev.in using `pip-compile`.
+# To update, run `scripts/update-deps`.
+
+-r requirements.txt
+black==23.12.1
+isort==5.12.0
+ruff==0.1.9
+mypy==1.7.1
+pytest-cov==4.1.0
+coverage[toml]==7.3.2
+bandit==1.7.5
+pip-audit==2.6.1
+cyclonedx-bom==3.13.0
+mkdocs==1.5.3
+mkdocs-material==9.5.2
+pip-tools==7.3.0
+build==1.0.3
+twine==4.0.2
+detect-secrets==1.4.0
+pre-commit==3.5.0
+watchfiles==0.21.0

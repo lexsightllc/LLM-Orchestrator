@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+source "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/_common.sh"
+
+"${ROOT_DIR}/scripts/check"
+run_python -m build
+run_python -m twine check dist/*
+
+echo "Artifacts ready in dist/. Tag and publish using your release workflow."

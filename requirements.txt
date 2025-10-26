@@ -1,7 +1,10 @@
-tiktoken>=0.4.0
-pydantic>=1.10.0
-pytest>=7.0.0
-pytest-asyncio>=0.20.0
-python-dotenv>=0.21.0
-httpx>=0.23.0
-orjson>=3.8.0
+# This file is generated from requirements.in using `pip-compile`.
+# To update, run `scripts/update-deps`.
+
+tiktoken==0.5.2
+pydantic==1.10.13
+pytest==7.4.4
+pytest-asyncio==0.21.1
+python-dotenv==1.0.0
+httpx==0.25.2
+orjson==3.9.12

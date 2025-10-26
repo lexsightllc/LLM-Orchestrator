@@ -42,15 +42,9 @@ See [Architecture Overview](docs/architecture_overview.md) for a detailed compon
    cd llm-orchestrator
    ```
 
-2. Create and activate a virtual environment:
+2. Bootstrap the project toolchain (creates `.venv/`, installs dependencies, and configures hooks):
    ```bash
-   python -m venv venv
-   source venv/bin/activate  # On Windows: .\venv\Scripts\activate
-   ```
-
-3. Install dependencies:
-   ```bash
-   pip install -r requirements.txt
+   make bootstrap
    ```
 
 ## Quick Start
@@ -81,25 +75,72 @@ context = await assembler.build(
 ## Running Tests
 
 ```bash
-pytest tests/ -v
+make test
 ```
 
-## Project Structure
+## Repository Structure
 
 ```
-llm-orchestrator/
-├── orchestrator/
-│   ├── context/           # Context management and assembly
-│   ├── models/            # Data models and schemas
-│   ├── tools/             # Tool definitions and registry
-│   ├── artifacts/         # Artifact storage and management
-│   ├── sandbox/           # Sandbox execution environments
-│   └── prompts/           # Versioned prompt templates
-├── tests/                 # Test suite
-├── .env.example          # Example environment variables
-├── requirements.txt      # Python dependencies
-└── README.md            # This file
+.
+├── CHANGELOG.md
+├── CODE_OF_CONDUCT.md
+├── CONTRIBUTING.md
+├── Makefile
+├── README.md
+├── docker-compose.yml
+├── docs/
+│   ├── advanced_architecture.md
+│   ├── architecture_overview.md
+│   └── adr/
+│       └── 0001-repository-structure.md
+├── scripts/
+│   ├── bootstrap                # Set up virtualenv, tooling, and hooks
+│   ├── check                    # Run the full validation suite
+│   ├── fmt | lint | typecheck   # Formatting and static analysis
+│   ├── test | e2e | coverage    # Test execution helpers
+│   ├── build | package | release
+│   ├── update-deps | security-scan | sbom
+│   ├── dev                      # Optional hot-reload test loop
+│   └── powershell/              # Windows equivalents of the toolbelt
+├── src/
+│   └── orchestrator/            # Core Python package
+├── tests/
+│   ├── unit/                    # Unit tests mirroring src/
+│   ├── integration/
+│   ├── e2e/
+│   └── fixtures/
+├── infra/
+│   └── docker/Dockerfile        # Container definition for local/CI parity
+├── sbom/                        # Generated Software Bill of Materials
+├── configs/                     # Runtime configuration assets
+├── assets/                      # Design and media assets
+├── data/                        # Sample datasets (kept empty by default)
+└── project.yaml                 # Machine-readable metadata
 ```
+
+## Developer Tasks
+
+All day-to-day automation is exposed through the scripts in `scripts/` and mirrored by
+Make targets:
+
+| Task | Description |
+| ---- | ----------- |
+| `make bootstrap` | Create a virtual environment, install dependencies, and configure pre-commit hooks. |
+| `make dev` | Run the unit test suite with optional hot-reload (`WATCH=1`). |
+| `make fmt` / `make lint` | Format code with Black/isort/Ruff and run static analysis including Bandit. |
+| `make typecheck` | Execute `mypy` in strict mode. |
+| `make test` / `make coverage` | Run unit tests with coverage reports and thresholds. |
+| `make e2e` | Execute end-to-end scenarios when present. |
+| `make build` / `make package` | Produce Python distributions for release. |
+| `make security-scan` | Perform dependency, code, and secrets scanning. |
+| `make sbom` | Generate a CycloneDX SBOM at `sbom/sbom.json`. |
+| `make update-deps` | Regenerate pinned dependency lockfiles using `pip-tools`. |
+| `make gen-docs` | Build the MkDocs documentation site. |
+| `make release` | Run `make check`, build artifacts, and validate them with Twine. |
+| `make check` | Aggregate formatting, linting, type checking, testing, coverage, and security scans. |
+
+Each script accepts standard flags (e.g., `--fix` for linting) and respects the virtual
+environment configured by `make bootstrap`.
 
 ## Configuration
 

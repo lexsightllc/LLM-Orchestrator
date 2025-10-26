@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+source "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/_common.sh"
+
+run_python -m pip_audit
+run_python -m bandit -r src/orchestrator
+run_python -m detect_secrets scan --all-files --exclude-files "sbom/.*" --exclude-lines "LLM_ORCHESTRATOR_DEFAULT_MODEL" > "${ROOT_DIR}/ci/detect-secrets-report.json"
+
+echo "Security scan reports saved to ci/detect-secrets-report.json"

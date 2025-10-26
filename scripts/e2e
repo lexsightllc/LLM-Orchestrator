@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+source "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/_common.sh"
+
+if [[ ! -d "${ROOT_DIR}/tests/e2e" ]] || [[ -z "$(find "${ROOT_DIR}/tests/e2e" -name 'test_*.py' -print -quit)" ]]; then
+  echo "No end-to-end tests detected. Skipping." >&2
+  exit 0
+fi
+
+run_python -m pytest tests/e2e "$@"
