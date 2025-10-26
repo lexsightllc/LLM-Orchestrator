@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: MPL-2.0
 """
 Recursion-safe tool normalization via Proxy.
 

@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: MPL-2.0
 """Calculator tool implementation."""
 from typing import Dict, Any
 from orchestrator.tools import ToolResult

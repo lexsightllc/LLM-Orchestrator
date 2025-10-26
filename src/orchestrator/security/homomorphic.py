@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: MPL-2.0
 """Toy homomorphic encryption utilities for routing decisions."""
 from __future__ import annotations
 

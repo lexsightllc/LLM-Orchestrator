@@ -1,0 +1,4 @@
+# SPDX-License-Identifier: MPL-2.0
+include LICENSE
+include NOTICE
+include THIRD_PARTY_NOTICES

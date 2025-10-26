@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: MPL-2.0
 ""Tests for the sandbox workers."""
 import asyncio
 import os

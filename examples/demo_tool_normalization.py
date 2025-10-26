@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: MPL-2.0
 """
 Demonstration of recursion-safe tool normalization via ToolProxy.
 Run this to confirm ToolResult shape and scalar boxing.

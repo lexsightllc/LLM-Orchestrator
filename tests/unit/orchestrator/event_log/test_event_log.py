@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: MPL-2.0
 """Tests for sharded event log with Merkle anchoring."""
 from orchestrator.event_log import EventLogShard, ShardedEventLog
 

@@ -1,3 +1,4 @@
+<!-- SPDX-License-Identifier: MPL-2.0 -->
 # Architecture Overview
 
 LLM Orchestrator is organized into modular subsystems that collaborate to run multi‑agent workflows.

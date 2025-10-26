@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: MPL-2.0
 """Command line interface for the LLM orchestrator."""
 from __future__ import annotations
 

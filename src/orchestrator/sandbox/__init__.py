@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: MPL-2.0
 """Sandbox execution environment for the LLM Orchestrator."""
 from __future__ import annotations
 

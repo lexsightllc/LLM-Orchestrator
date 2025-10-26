@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: MPL-2.0
 """Real-time governance through telemetry feedback."""
 from __future__ import annotations
 

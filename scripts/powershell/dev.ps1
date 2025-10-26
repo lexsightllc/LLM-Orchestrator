@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: MPL-2.0
 . "$PSScriptRoot/common.ps1"
 
 if ($env:WATCH -eq '1') {

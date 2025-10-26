@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: MPL-2.0
 """
 Demo of the tool versioning system.
 

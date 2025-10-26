@@ -1,3 +1,4 @@
+<!-- SPDX-License-Identifier: MPL-2.0 -->
 # LLM Orchestrator
 
 A high-performance orchestration framework for managing multi-agent LLM workflows with fine‑grained control over context, tooling, and resource allocation.
@@ -152,8 +153,17 @@ cp .env.example .env
 
 ## License
 
-Proprietary - All Rights Reserved
+LLM Orchestrator is distributed under the [Mozilla Public License 2.0](LICENSE).
+Modifications to MPL-covered files must be shared under the same license so
+that downstream users receive the improvements. Larger works that merely
+aggregate or interface with this project may remain under their own
+proprietary or open source terms.
 
-This project is proprietary and confidential. Unauthorized copying,
-modification, distribution, or use is prohibited without prior
-written consent from the author.
+For attribution requirements and third-party acknowledgements, review the
+[NOTICE](NOTICE) file alongside the detailed [THIRD_PARTY_NOTICES](THIRD_PARTY_NOTICES).
+
+## Credits
+
+LLM Orchestrator is maintained by Augusto "Guto" Ochoa Ughini and the
+community of contributors. See [NOTICE](NOTICE) for project attribution and
+[THIRD_PARTY_NOTICES](THIRD_PARTY_NOTICES) for bundled dependency licenses.

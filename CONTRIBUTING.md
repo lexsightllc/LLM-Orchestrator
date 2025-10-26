@@ -1,7 +1,19 @@
+<!-- SPDX-License-Identifier: MPL-2.0 -->
 # Contributing Guide
 
 Thank you for considering a contribution to LLM Orchestrator! This project follows a
 standardized workflow so that every change is reproducible and reviewable.
+
+## License for Contributions
+
+By submitting a contribution, you agree that it will be licensed under the
+Mozilla Public License 2.0 (MPL-2.0). Inbound equals outbound: your patches
+are distributed under the same terms that govern the rest of the project so
+that recipients retain the right to use, modify, and redistribute the code.
+
+Please ensure that any third-party code you include is compatible with
+MPL-2.0 and that its original license notices are preserved in
+`THIRD_PARTY_NOTICES` or the corresponding vendor directory.
 
 ## Development Workflow
 

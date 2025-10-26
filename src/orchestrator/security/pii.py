@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: MPL-2.0
 """Utilities for detecting and redacting PII from text."""
 from __future__ import annotations
 

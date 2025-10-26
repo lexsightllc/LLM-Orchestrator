@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: MPL-2.0
 """Lightweight jsonschema validator used when the external dependency is unavailable."""
 from __future__ import annotations
 

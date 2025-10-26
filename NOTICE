@@ -1,0 +1,10 @@
+ProjectName © 2025 Augusto 'Guto' Ochoa Ughini
+
+This project is distributed under the Mozilla Public License 2.0. See the accompanying
+LICENSE file for the full terms. Modifications to files covered by the MPL must be
+shared under the same license, while larger works that merely aggregate this project
+may remain under their own terms.
+
+Third-party components used by LLM Orchestrator are documented in THIRD_PARTY_NOTICES.
+Any distribution of this project must include both this NOTICE file and
+THIRD_PARTY_NOTICES to satisfy attribution requirements.

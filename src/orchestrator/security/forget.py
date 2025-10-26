@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: MPL-2.0
 """Simple key management supporting a right-to-be-forgotten mechanism."""
 from __future__ import annotations
 

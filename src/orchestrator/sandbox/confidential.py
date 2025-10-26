@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: MPL-2.0
 """Placeholder for confidential computing sandbox."""
 from __future__ import annotations
 

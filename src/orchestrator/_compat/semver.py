@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: MPL-2.0
 """Minimal semver-compatible utilities for internal use.
 
 Provides a lightweight replacement for the external ``semver`` dependency

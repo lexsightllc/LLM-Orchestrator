@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: MPL-2.0
 """
 Sandbox environment for safely executing untrusted code.
 
