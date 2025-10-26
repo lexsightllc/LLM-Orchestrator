@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: MPL-2.0
 """LLM Orchestrator - A framework for managing multi-agent LLM workflows."""
 
 __version__ = "0.1.0"

@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: MPL-2.0
 """Generate simple audit reports from the event log."""
 from __future__ import annotations
 

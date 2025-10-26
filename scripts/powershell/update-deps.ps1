@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: MPL-2.0
 . "$PSScriptRoot/common.ps1"
 
 Run-Python @('-m', 'piptools', 'compile', (Join-Path $RootDir 'requirements.in'), '--output-file', (Join-Path $RootDir 'requirements.txt')) @args

@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: MPL-2.0
 """End-to-end scenario covering sandbox tool execution."""
 import pytest
 

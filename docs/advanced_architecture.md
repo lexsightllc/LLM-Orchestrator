@@ -1,3 +1,4 @@
+<!-- SPDX-License-Identifier: MPL-2.0 -->
 # Advanced Architecture Strategies
 
 ## 1. Distributed Event Log Sharding

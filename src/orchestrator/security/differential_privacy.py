@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: MPL-2.0
 """Basic differential privacy utilities for shared memory statistics."""
 from __future__ import annotations
 

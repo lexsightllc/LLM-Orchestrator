@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: MPL-2.0
 import pytest
 from unittest.mock import AsyncMock, MagicMock
 from orchestrator.context.assembler import ContextAssembler, ContextBudget, ProviderCaps

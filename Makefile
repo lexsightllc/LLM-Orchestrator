@@ -1,55 +1,57 @@
-.PHONY: bootstrap dev lint fmt typecheck test e2e coverage build package release update-deps security-scan sbom gen-docs migrate clean check
+# SPDX-License-Identifier: MPL-2.0
+.PHONY: bootstrap dev lint fmt typecheck test e2e coverage build package release update-deps security-scan sbom gen-docs migrate \
+        clean check
 
 bootstrap:
-./scripts/bootstrap
+	./scripts/bootstrap
 
 dev:
-./scripts/dev
+	./scripts/dev
 
 lint:
-./scripts/lint
+	./scripts/lint
 
 fmt:
-./scripts/fmt
+	./scripts/fmt
 
 typecheck:
-./scripts/typecheck
+	./scripts/typecheck
 
 test:
-./scripts/test
+	./scripts/test
 
 e2e:
-./scripts/e2e
+	./scripts/e2e
 
 coverage:
-./scripts/coverage
+	./scripts/coverage
 
 build:
-./scripts/build
+	./scripts/build
 
 package:
-./scripts/package
+	./scripts/package
 
 release:
-./scripts/release
+	./scripts/release
 
 update-deps:
-./scripts/update-deps --upgrade
+	./scripts/update-deps --upgrade
 
 security-scan:
-./scripts/security-scan
+	./scripts/security-scan
 
 sbom:
-./scripts/sbom
+	./scripts/sbom
 
 gen-docs:
-./scripts/gen-docs
+	./scripts/gen-docs
 
 migrate:
-./scripts/migrate
+	./scripts/migrate
 
 clean:
-./scripts/clean
+	./scripts/clean
 
 check:
-./scripts/check
+	./scripts/check

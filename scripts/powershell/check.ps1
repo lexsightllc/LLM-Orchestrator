@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: MPL-2.0
 $root = Split-Path -Parent (Split-Path -Parent $MyInvocation.MyCommand.Path)
 
 & (Join-Path $root 'scripts/powershell/fmt.ps1') -Check

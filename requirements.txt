@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: MPL-2.0
 # This file is generated from requirements.in using `pip-compile`.
 # To update, run `scripts/update-deps`.
 

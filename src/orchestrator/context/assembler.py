@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: MPL-2.0
 """Context assembly and management for LLM orchestration."""
 from __future__ import annotations
 

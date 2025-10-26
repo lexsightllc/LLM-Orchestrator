@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: MPL-2.0
 [build-system]
 requires = ["setuptools>=68.0", "wheel"]
 build-backend = "setuptools.build_meta"
@@ -10,6 +11,10 @@ readme = "README.md"
 requires-python = ">=3.10"
 authors = [
   { name = "LLM Orchestrator Maintainers", email = "maintainers@example.com" }
+]
+license = { text = "MPL-2.0" }
+classifiers = [
+  "License :: OSI Approved :: Mozilla Public License 2.0 (MPL 2.0)",
 ]
 dependencies = [
   "tiktoken==0.5.2",

@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: MPL-2.0
 """Minimal multi-party computation utilities using additive secret sharing."""
 from __future__ import annotations
 

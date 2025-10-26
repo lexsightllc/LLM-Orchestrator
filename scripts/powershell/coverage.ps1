@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: MPL-2.0
 . "$PSScriptRoot/common.ps1"
 
 Run-Python @('-m', 'pytest', 'tests', '--cov=orchestrator', '--cov-report=term-missing', '--cov-report=xml')

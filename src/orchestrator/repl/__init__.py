@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: MPL-2.0
 """
 REPL (Read-Eval-Print Loop) interface for LLM Orchestrator.
 

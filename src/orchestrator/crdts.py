@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: MPL-2.0
 """Domain specific CRDT implementations."""
 from __future__ import annotations
 

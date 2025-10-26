@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: MPL-2.0
 """Shared types and constants for the sandbox module."""
 from enum import Enum, auto
 from typing import Any, Dict, List, Optional, Union

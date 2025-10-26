@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: MPL-2.0
 """Content-addressable artifact storage utilities.
 
 This module provides a minimal yet fully-typed artifact management subsystem

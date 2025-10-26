@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: MPL-2.0
 """Predictive model pool management."""
 from __future__ import annotations
 

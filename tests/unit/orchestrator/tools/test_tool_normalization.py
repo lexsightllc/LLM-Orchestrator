@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: MPL-2.0
 import pytest
 from orchestrator import tools
 from orchestrator.tools import ToolResult

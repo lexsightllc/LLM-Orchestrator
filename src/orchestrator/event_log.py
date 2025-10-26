@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: MPL-2.0
 """Sharded event log with cryptographic hash chains and Merkle anchoring."""
 from __future__ import annotations
 

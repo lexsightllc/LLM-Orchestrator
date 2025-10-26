@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: MPL-2.0
 """Runtime SLA registry with dynamic renegotiation."""
 from __future__ import annotations
 

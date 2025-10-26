@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: MPL-2.0
 repos:
   - repo: https://github.com/psf/black
     rev: 23.12.1
@@ -26,3 +27,17 @@ repos:
       - id: commitlint
         stages: [commit-msg]
         additional_dependencies: ['@commitlint/config-conventional']
+  - repo: https://github.com/fsfe/reuse-tool
+    rev: v3.0.2
+    hooks:
+      - id: reuse
+        name: reuse lint
+        args: ["lint"]
+  - repo: local
+    hooks:
+      - id: add-spdx-header
+        name: Add SPDX license header
+        entry: scripts/add_spdx_header.py
+        language: python
+        types_or: [python, shell, powershell, yaml, toml, markdown, cfg, text]
+        require_serial: true

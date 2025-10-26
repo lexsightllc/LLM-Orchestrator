@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: MPL-2.0
 """Tests for the artifact management system."""
 import json
 import os

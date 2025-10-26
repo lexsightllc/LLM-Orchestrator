@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: MPL-2.0
 """SBOM generation and simple vulnerability tracking."""
 from __future__ import annotations
 

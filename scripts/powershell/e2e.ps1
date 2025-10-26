@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: MPL-2.0
 . "$PSScriptRoot/common.ps1"
 
 $e2eDir = Join-Path $RootDir 'tests/e2e'

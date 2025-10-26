@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: MPL-2.0
 $Script:RootDir = Split-Path -Parent (Split-Path -Parent (Split-Path -Parent $MyInvocation.MyCommand.Path))
 $Script:VenvDir = Join-Path $RootDir '.venv'
 $Script:PythonBin = if ($env:PYTHON_BIN) { $env:PYTHON_BIN } else { Join-Path $VenvDir 'Scripts\python.exe' }

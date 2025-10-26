@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: MPL-2.0
 """Simple placeholder interface for an HSM signer."""
 from __future__ import annotations
 

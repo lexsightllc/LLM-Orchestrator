@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: MPL-2.0
 """
 Migration script for calculator tool from 1.0.0 to 1.1.0.
 

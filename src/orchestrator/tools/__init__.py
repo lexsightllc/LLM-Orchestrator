@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: MPL-2.0
 """Tool versioning and registry for LLM Orchestrator."""
 
 from typing import Dict, List, Optional, Protocol, TypeVar, Any

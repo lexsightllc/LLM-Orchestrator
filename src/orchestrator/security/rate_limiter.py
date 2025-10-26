@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: MPL-2.0
 """Rate limiting with basic prompt injection detection."""
 from __future__ import annotations
 

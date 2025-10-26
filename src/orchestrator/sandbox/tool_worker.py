@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: MPL-2.0
 """
 Tool Worker for executing registered tools in a sandboxed environment.
 
