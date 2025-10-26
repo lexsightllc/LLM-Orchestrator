@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+source "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/_common.sh"
+
+run_python -m pytest tests --cov=orchestrator --cov-report=term-missing --cov-report=xml
+run_python -m coverage report --fail-under=85

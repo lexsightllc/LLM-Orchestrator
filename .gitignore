@@ -1,0 +1,40 @@
+# Python
+__pycache__/
+*.py[cod]
+*.so
+*.egg
+*.egg-info/
+dist/
+build/
+.eggs/
+
+# Virtual environments
+.venv/
+venv/
+.env
+
+# Editors
+.vscode/
+.idea/
+
+# Coverage
+.coverage*
+htmlcov/
+.pytest_cache/
+.mypy_cache/
+ruff_cache/
+
+# Docs
+site/
+
+# SBOM and artifacts
+sbom/
+!sbom/.gitkeep
+artifacts/
+ci/detect-secrets-report.json
+
+# Logs
+*.log
+
+# dotenv
+.env.local

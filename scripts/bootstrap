@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+source "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/_common.sh"
+
+ensure_virtualenv
+run_pip install --upgrade pip
+run_pip install -r "${ROOT_DIR}/requirements.txt"
+run_pip install -r "${ROOT_DIR}/requirements-dev.txt"
+
+run_python -m pre_commit install --install-hooks
+run_python -m pre_commit install --hook-type commit-msg
+
+echo "Environment bootstrapped. Activate with: source .venv/bin/activate"

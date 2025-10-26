@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+source "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/_common.sh"
+
+mkdir -p "${ROOT_DIR}/sbom"
+run_python -m cyclonedx_py --environment pip --json --output "${ROOT_DIR}/sbom/sbom.json"

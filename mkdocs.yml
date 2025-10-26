@@ -1,0 +1,17 @@
+site_name: LLM Orchestrator
+repo_url: https://example.com/llm-orchestrator
+nav:
+  - Home: README.md
+  - Architecture Overview: docs/architecture_overview.md
+  - Advanced Architecture: docs/advanced_architecture.md
+  - ADRs:
+      - Repository Structure: docs/adr/0001-repository-structure.md
+theme:
+  name: material
+  features:
+    - navigation.instant
+    - navigation.sections
+markdown_extensions:
+  - admonition
+  - codehilite
+  - pymdownx.superfences

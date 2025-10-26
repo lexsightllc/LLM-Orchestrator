@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+source "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/_common.sh"
+
+EXTRA_ARGS=("$@")
+
+run_python -m piptools compile "${ROOT_DIR}/requirements.in" --output-file "${ROOT_DIR}/requirements.txt" "${EXTRA_ARGS[@]}"
+run_python -m piptools compile "${ROOT_DIR}/requirements-dev.in" --output-file "${ROOT_DIR}/requirements-dev.txt" "${EXTRA_ARGS[@]}"

@@ -1,14 +1,6 @@
 import pytest
-import sys
-from pathlib import Path
 from unittest.mock import AsyncMock, patch, PropertyMock, MagicMock, create_autospec
 
-# Add the project root to the Python path
-project_root = str(Path(__file__).parent.parent)
-if project_root not in sys.path:
-    sys.path.insert(0, project_root)
-
-# Import the necessary classes
 from orchestrator.tools import ToolRegistry, ToolVersion, ToolResult, ToolError, tool_registry
 from orchestrator.sandbox.tool_worker import ToolWorker
 

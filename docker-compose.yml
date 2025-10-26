@@ -1,0 +1,15 @@
+version: '3.9'
+
+services:
+  orchestrator:
+    build:
+      context: .
+      dockerfile: infra/docker/Dockerfile
+    image: llm-orchestrator:dev
+    env_file:
+      - .env.example
+    volumes:
+      - ./:/app
+    command: ["python", "-m", "orchestrator.cli"]
+    ports:
+      - "8000:8000"

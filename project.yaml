@@ -1,0 +1,28 @@
+name: llm-orchestrator
+language: python
+package_manager: pip
+runtime:
+  python: '3.11'
+package:
+  entrypoints:
+    cli: python -m orchestrator.cli
+  type: library
+services:
+  - name: orchestrator-core
+    type: library
+    ports: []
+owners:
+  - team: llm-orchestrator/maintainers
+  - email: maintainers@example.com
+tooling:
+  lint: ruff
+  format: black
+  typecheck: mypy
+  tests:
+    unit: pytest
+    e2e: pytest
+ci:
+  workflows:
+    - .github/workflows/ci.yml
+notes:
+  - The Python package name remains `orchestrator` to preserve public APIs.

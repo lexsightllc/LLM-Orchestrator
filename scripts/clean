@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+source "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/_common.sh"
+
+rm -rf "${ROOT_DIR}/build" "${ROOT_DIR}/dist" "${ROOT_DIR}/.mypy_cache" \
+       "${ROOT_DIR}/.pytest_cache" "${ROOT_DIR}/.coverage" "${ROOT_DIR}/htmlcov" \
+       "${ROOT_DIR}/ruff_cache" "${ROOT_DIR}/site"

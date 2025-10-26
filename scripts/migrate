@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+source "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/_common.sh"
+
+MIGRATIONS_DIR="${ROOT_DIR}/infra/migrations"
+if [[ ! -d "${MIGRATIONS_DIR}" ]]; then
+  echo "No migrations directory found at ${MIGRATIONS_DIR}." >&2
+  exit 0
+fi
+
+echo "Implement database migration runner for your chosen backend." >&2
+exit 0

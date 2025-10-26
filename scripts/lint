@@ -1,0 +1,31 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+source "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/_common.sh"
+
+FIX="0"
+ARGS=()
+
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+    --fix)
+      FIX="1"
+      shift
+      ;;
+    *)
+      ARGS+=("$1")
+      shift
+      ;;
+  esac
+done
+
+RUFF_ARGS=("check" "src" "tests")
+if [[ ${#ARGS[@]} -gt 0 ]]; then
+  RUFF_ARGS+=("${ARGS[@]}")
+fi
+if [[ "${FIX}" == "1" ]]; then
+  RUFF_ARGS+=("--fix")
+fi
+
+run_python -m ruff "${RUFF_ARGS[@]}"
+run_python -m bandit -r src/orchestrator

@@ -1,0 +1,23 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+source "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/_common.sh"
+
+if [[ "${WATCH:-0}" == "1" ]]; then
+  run_python <<'PY'
+import subprocess
+import sys
+from watchfiles import run_process
+
+CMD = [sys.executable, '-m', 'pytest', 'tests/unit', '--maxfail=1', '--lf']
+
+def _runner():
+    result = subprocess.run(CMD, check=False)
+    if result.returncode != 0:
+        print(f"Test run exited with {result.returncode}", file=sys.stderr)
+
+run_process(['src', 'tests'], target=_runner)
+PY
+else
+  run_python -m pytest tests/unit --maxfail=1 --lf
+fi

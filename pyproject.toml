@@ -1,0 +1,79 @@
+[build-system]
+requires = ["setuptools>=68.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "llm-orchestrator"
+version = "0.1.0"
+description = "A high-performance orchestration framework for managing multi-agent LLM workflows."
+readme = "README.md"
+requires-python = ">=3.10"
+authors = [
+  { name = "LLM Orchestrator Maintainers", email = "maintainers@example.com" }
+]
+dependencies = [
+  "tiktoken==0.5.2",
+  "pydantic==1.10.13",
+  "python-dotenv==1.0.0",
+  "httpx==0.25.2",
+  "orjson==3.9.12"
+]
+optional-dependencies = { test = ["pytest==7.4.4", "pytest-asyncio==0.21.1"] }
+
+[project.urls]
+Homepage = "https://example.com/llm-orchestrator"
+Documentation = "https://example.com/llm-orchestrator/docs"
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.black]
+line-length = 100
+target-version = ["py311"]
+
+[tool.isort]
+profile = "black"
+line_length = 100
+src_paths = ["src", "tests"]
+
+[tool.ruff]
+line-length = 100
+src = ["src", "tests"]
+select = ["E", "F", "I", "N", "B", "UP", "S"]
+ignore = ["B008"]
+fix = false
+
+deny-warnings = false
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+line-ending = "lf"
+
+[tool.mypy]
+python_version = "3.11"
+strict = true
+plugins = ["pydantic.mypy"]
+packages = ["orchestrator"]
+ignore_missing_imports = true
+
+[tool.pytest.ini_options]
+minversion = "7.0"
+addopts = "-ra --strict-markers"
+testpaths = ["tests"]
+
+[tool.coverage.run]
+branch = true
+source = ["orchestrator"]
+omit = ["tests/*"]
+
+[tool.coverage.report]
+show_missing = true
+fail_under = 85
+skip_covered = false
+
+[tool.bandit]
+targets = ["src/orchestrator"]
